@@ -9,7 +9,7 @@
     <ProductVersion>10.0.20506</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <RootNamespace></RootNamespace>
-    <ProjectGuid>{C3558D97-5079-BA78-1B9E-2D090FF6A339}</ProjectGuid>
+    <ProjectGuid>{3491D71C-CAD2-44DB-929B-65FEE7764F4A}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <AssemblyName>Assembly-CSharp</AssemblyName>
@@ -52,6 +52,7 @@
   </ItemGroup>
   <ItemGroup>
      <Compile Include="Assets\justascript.cs" />
+     <Compile Include="Assets\moveThing.cs" />
      <Compile Include="Assets\playBoy.cs" />
      <Compile Include="Assets\SteamVR\Plugins\openvr_api.cs" />
      <Compile Include="Assets\SteamVR\Scripts\SteamVR.cs" />
@@ -81,6 +82,7 @@
      <Compile Include="Assets\SteamVR\Scripts\SteamVR_TrackedObject.cs" />
      <Compile Include="Assets\SteamVR\Scripts\SteamVR_UpdatePoses.cs" />
      <Compile Include="Assets\SteamVR\Scripts\SteamVR_Utils.cs" />
+     <Compile Include="Assets\TowerSpawner.cs" />
      <None Include="Assets\SteamVR\Resources\SteamVR_Fade.shader" />
      <None Include="Assets\SteamVR\Resources\SteamVR_ClearAll.shader" />
      <None Include="Assets\SteamVR\Resources\SteamVR_SphericalProjection.shader" />

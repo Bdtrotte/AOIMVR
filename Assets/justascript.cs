@@ -28,7 +28,7 @@ public class justascript : MonoBehaviour
 	void FixedUpdate ()
 	{
 		if (d.GetPress(Valve.VR.EVRButtonId.k_EButton_Grip)) {
-			float force = 10f;
+			float force = 2000f;
 			r.AddForce (t.up * force);
 			if (ps.isStopped)
 				ps.Play ();
@@ -45,22 +45,39 @@ public class justascript : MonoBehaviour
 				hasFired = false;
 				line.enabled = false;
 			} else {
-				float f = d.GetAxis (Valve.VR.EVRButtonId.k_EButton_SteamVR_Trigger).x * 20;
+				float f = d.GetAxis (Valve.VR.EVRButtonId.k_EButton_SteamVR_Trigger).x * 4000;
 				r.AddForce ((hookPoint.position - feet.position).normalized * f);
+				Rigidbody rig = hookPoint.parent.gameObject.GetComponent<Rigidbody> ();
+				if (rig != null)
+					rig.AddForce ((HipPoint() - hookPoint.position).normalized * f);
 
 				Vector3 hipPoint = HipPoint ();
 				float distance = Vector3.Distance (hipPoint, hookPoint.position);
 
 				if (distance > ropeLength) {
 					Vector3 hookToHipDir = (hipPoint - hookPoint.position).normalized;
-					Vector3 targetPos = hookToHipDir * ropeLength + hookPoint.position;
-					Vector3 hipToCenter = player.position - hipPoint;
 
-					player.position = targetPos + hipToCenter;
+					if (rig == null) {
+						Vector3 newVelocity = r.velocity - Vector3.Dot (r.velocity, hookToHipDir) * hookToHipDir - hookToHipDir * (distance - ropeLength);
+						r.velocity = newVelocity;
+					} else {
+						//Modify the other position and velocity to swing around this.
+						Vector3 newOtherVelocity = rig.velocity;
+						float otherAwaySpeed = Vector3.Dot (r.velocity, -hookToHipDir);
+						if (otherAwaySpeed > 0)
+							newOtherVelocity += otherAwaySpeed * hookToHipDir;
+						newOtherVelocity += hookToHipDir * (distance - ropeLength);
 
-					Vector3 newVelocity = r.velocity -Vector3.Dot (r.velocity, hookToHipDir) * hookToHipDir;
-					r.velocity = newVelocity;
+						rig.velocity = newOtherVelocity;
 
+						Vector3 crossProduct = Vector3.Cross (hookPoint.position - rig.transform.position, hookToHipDir * (distance - ropeLength));
+						rig.angularVelocity = crossProduct*50;
+
+						Vector3 desiredPos = -hookToHipDir * ropeLength + hipPoint;
+						Vector3 hookToOther = rig.transform.position - hookPoint.position;
+
+						rig.transform.position = desiredPos + hookToOther;
+					}
 				} else if (f != 0) {
 					ropeLength = distance;
 				}
