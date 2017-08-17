@@ -135,9 +135,21 @@ public class justascript : MonoBehaviour
 		if (linePoints.Count > 1) {
 			Vector3 aroundCornerPoint = linePoints[linePoints.Count - 2].position;
 			if (!Physics.Raycast(hipPoint.position, aroundCornerPoint - hipPoint.position, Vector3.Distance(aroundCornerPoint, hipPoint.position), ~(1<<8))) {
-				Destroy(linePoints[linePoints.Count - 1].gameObject);
-				linePoints.RemoveAt(linePoints.Count - 1);
-				return;
+				bool isClear = true;
+				for (int i = 1; i < 20; ++i) {
+					float f = (float)i / 20;
+					Vector3 fromPoint = Vector3.Lerp(hipPoint.position, linePoints[linePoints.Count - 1].position, f);
+					Ray ray = new Ray (fromPoint, aroundCornerPoint - fromPoint);
+					if (Physics.Raycast(ray, Vector3.Distance(fromPoint, aroundCornerPoint), ~(1<<8))) {
+						isClear = false;
+						break;
+					}
+				}
+				if (isClear) {
+					Destroy (linePoints [linePoints.Count - 1].gameObject);
+					linePoints.RemoveAt (linePoints.Count - 1);
+					return;
+				}
 			}
 		}
 
